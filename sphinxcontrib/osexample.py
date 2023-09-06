@@ -18,6 +18,7 @@ CSS_FILE = 'osexample.css'
 JS_FILE = 'osexample.js'
 
 __all__ = ['UbuntuLexer', 'CentosLexer', 'FedoraLexer', 'OSXLexer']
+logger = logging.getLogger(__name__)
 
 class UbuntuLexer(RegexLexer):
     name = 'Ubuntu'
@@ -113,20 +114,20 @@ class ExampleCodeDirective(Directive):
 
 
 def add_assets(app):
-    app.add_stylesheet(CSS_FILE)
-    app.add_javascript(JS_FILE)
+    app.add_css_file(CSS_FILE)
+    app.add_js_file(JS_FILE)
 
 def copy_assets(app, exception):
     if app.builder.name != 'html' or exception:
         return
-    app.info('Copying osexample stylesheet/javascript... ', nonl=True)
+    logger.info('Copying osexample stylesheet/javascript... ')
     dest = os.path.join(app.builder.outdir, '_static', CSS_FILE)
     source = os.path.join(os.path.abspath(os.path.dirname(__file__)), CSS_FILE)
     copyfile(source, dest)
     dest = os.path.join(app.builder.outdir, '_static', JS_FILE)
     source = os.path.join(os.path.abspath(os.path.dirname(__file__)), JS_FILE)
     copyfile(source, dest)
-    app.info('done')
+    logger.info('done')
 
 def setup(app):
     app.add_directive('example-code',  ExampleCodeDirective)
